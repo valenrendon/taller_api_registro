@@ -32,8 +32,6 @@ def register(usuario: Usuario):
 
 @app.post("/login")
 def login(usuario: Usuario):
-    if usuario.email == "user@test.com" and usuario.password == "Test123":
-        return {"mensaje": "Login exitoso"}
 
     for u in database.usuarios:
         if u["email"] == usuario.email and u["password"] == usuario.password:
