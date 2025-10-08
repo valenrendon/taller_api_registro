@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Taller Web - Registro y Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f4f4f9;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      width: 300px;
+    }
+    input {
+      display: block;
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      background: #4CAF50;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #resultado {
+      margin-top: 20px;
+      padding: 10px;
+      width: 320px;
+      border-radius: 5px;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <h1>Registro</h1>
+  <form id="registerForm">
+    <input type="email" id="regEmail" placeholder="Correo" required>
+    <input type="password" id="regPassword" placeholder="Contraseña" required>
+    <button type="submit">Registrar</button>
+  </form>
+
+  <h1>Login</h1>
+  <form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Correo" required>
+    <input type="password" id="loginPassword" placeholder="Contraseña" required>
+    <button type="submit">Iniciar sesión</button>
+  </form>
+
+  <div id="resultado">Aquí verás las respuestas de la API</div>
+
+  <script>
+    const apiUrl = "http://127.0.0.1:8000";
+
+    function mostrarMensaje(mensaje, tipo) {
+      const resultado = document.getElementById("resultado");
+      resultado.innerText = mensaje;
+      resultado.className = tipo; // agrega clase success o error
+    }
+
+    // Registro
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+
+      try {
+        const res = await fetch(apiUrl + "/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          mostrarMensaje("✅ " + data.mensaje, "success");
+        } else {
+          mostrarMensaje("⚠️ " + (data.detail || "Error en registro"), "error");
+        }
+      } catch (error) {
+        mostrarMensaje("⚠️ Error de conexión con el servidor", "error");
+      }
+    });
+
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const res = await fetch(apiUrl + "/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          mostrarMensaje("✅ " + data.mensaje, "success");
+        } else {
+          mostrarMensaje("⚠️ " + (data.detail || "Credenciales inválidas"), "error");
+        }
+      } catch (error) {
+        mostrarMensaje("⚠️ Error de conexión con el servidor", "error");
+      }
+    });
+  </script>
+</body>
+</html>
+
