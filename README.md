@@ -1,1 +1,1 @@
-#Taller de Git conproyecto api-reservas
+#Taller de Git con proyecto api-reservas
